@@ -6,7 +6,7 @@ This plugin has been tested with Sigil v. 0.8.6 on Windows 7 and Ubuntu 15.04 (b
 To run the plugin:
 1) If you haven't already, install Python interpreter v3.4 (downloadable from www.python.org), then install BeautifulSoup4 (in Windows you can, from the command line, go to the folder "Scripts" inside the installation folder of python and type "pip install beautifulsoup4").
 2) Download all the files from this repository.
-3) Pack the files in a zip archive named EndNotesToParagraphs (if you are willing to test on Mac, then you must before add "osx" at the <oslist> tag in plugin.xml).
+3) Pack the files in a zip archive named EndNotesToParagraphs (if you are willing to test on Mac, then you must before add "osx" at the &lt;oslist&gt; tag in plugin.xml).
 4) Open Sigil, go to menu Plugins -> Manage Plugins. If it hasn't already, set the path for python3.4, then click on Add Plugin and select the zip file.
 5) Launch the plugin from menu Plugins -> Edit -> EndNotesToParagraphs.
 

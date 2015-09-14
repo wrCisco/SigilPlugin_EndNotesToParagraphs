@@ -2,8 +2,6 @@
 
 import sys
 import re
-import inspect
-import os
 import html
 import bs4
 from tkinter import *

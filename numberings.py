@@ -43,6 +43,10 @@ def intToRoman(counter, case):
                 break
     return noteSign
 
+    
+def addZeroes(counter, filler):
+    return '{:0>{filler}}'.format(counter, filler=filler)
+
 
 if __name__ == '__main__':
     for x in range(5):

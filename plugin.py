@@ -193,7 +193,10 @@ class MainDialog(Tk):
                            'A, B, C, D... (italian alphabet)',
                            'a, b, c, d... (italian alphabet)',
                            'I, II, III, IV...',
-                           'i, ii, iii, iv...']
+                           'i, ii, iii, iv...',
+                           '01, 02, 03, 04...',
+                           '001, 002, 003, 004...',
+                           '0001, 0002, 0003, 0004...']
         self.whichNumberingCombobox.configure(values=numberingValues)
         self.selectedNumbering.set(numberingValues[0])
         
@@ -359,6 +362,12 @@ def pickingNumbering(counter):
         return numberings.intToRoman(counter, 'upper')
     elif parameters['numbering'] == 'i, ii, iii, iv...':
         return numberings.intToRoman(counter, 'lower')
+    elif parameters['numbering'] == '01, 02, 03, 04...':
+        return numberings.addZeroes(counter, 2)
+    elif parameters['numbering'] == '001, 002, 003, 004...':
+        return numberings.addZeroes(counter, 3)
+    elif parameters['numbering'] == '0001, 0002, 0003, 0004...':
+        return numberings.addZeroes(counter, 4)
 
 
 #switcher should always assume values amongst 'li', 'ol_class' and 'ol_id'

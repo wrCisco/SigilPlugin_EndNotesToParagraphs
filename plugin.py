@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import sys
 import re
@@ -6,8 +6,8 @@ import html
 import bs4
 from tkinter import *
 from tkinter import ttk
-import languages #Reminder for working in Eclipse: this is not an error.
-import numberings #This too.
+import languages
+import numberings
 
 
 
@@ -26,6 +26,7 @@ class MainDialog(Tk):
         super().__init__()
         self.title('Endnotes Adjuster')
         self.resizable(width=FALSE, height=FALSE)
+        self.geometry('+100+100')
         self.mainframe = ttk.Frame(self, padding="12 12 12 12") # padding values's order: "W N E S"
         self.mainframe.grid(column=0, row=0, sticky=(N,W,E,S))
         
@@ -207,13 +208,13 @@ class IdDialog(Tk):
         super().__init__()
         self.title(language[10])
         self.resizable(height=FALSE, width=FALSE)
-        self.geometry('430x150+300+200')
+        self.geometry('+350+200')
         self.mainframe = ttk.Frame(self, padding="3 3 12 12")
         self.mainframe.grid(column=0, row=0, sticky=(N,W,E,S))
         self.labelInfo = ttk.Label(self.mainframe,
                                    text=language[11].format(
                                     fileHref, counter, aHref, aId),
-                                   wraplength='300px')
+                                   wraplength='430px')
         self.labelInfo.grid(row=0, column=0, columnspan=5, sticky=(N,W))
         self.buttonKeep = ttk.Button(self.mainframe, text=language[12], 
                                      command=lambda: self.keeporover(koo='keep'))
@@ -446,11 +447,7 @@ def refFinder(noteIdFile, idNote, bk, counter):
     
 def decodeAdjuster(soup):
     """Replace html name entities with unicode characters.
-    Ubuntu version of Sigil doubles html name entities in Book View and
-    in Preview, so this function replace them all. Exceptions: 
-    particular spaces, that would be lost, and xml entities, that would 
-    cause some trouble (&lt; and &gt;) or no trouble at all 
-    (&quot;, &apos;, &amp;)."""
+    Exceptions: particular spaces, that would be lost, and xml entities"""
     soupDecoded = soup.decode(formatter='html')
     preserveEntities = {'&nbsp;':'&NBSP;',
                    '&ensp;':'&ENSP;',

@@ -45,7 +45,7 @@ def intToRoman(counter, case):
 
     
 def addZeroes(counter, filler):
-    return '{:0>{filler}}'.format(counter, filler=filler)
+    return '{:0{filler}}'.format(counter, filler=filler)
 
 
 if __name__ == '__main__':

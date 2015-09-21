@@ -455,19 +455,24 @@ def refFinder(noteIdFile, idNote, bk, counter):
     
     
 def decodeAdjuster(soup):
-    """Replace html name entities with unicode characters.
+    """Replace html named and numeric character references with unicode characters.
     Exceptions: particular spaces, that would be lost, and xml entities"""
     soupDecoded = soup.decode(formatter='html')
     preserveEntities = {'&nbsp;':'&NBSP;',
-                   '&ensp;':'&ENSP;',
-                   '&emsp;':'&EMSP;',
-                   '&thinsp;':'&THINSP;',
-                   '&shy;':'&SHY;',
-                   '&lt;':'&TL;', #these two are converted by html.unescape even if they are
-                   '&gt;':'&TG;', #in uppercase or missing of the semicolon
-                   '&quot;':'&QUOT;',
-                   '&apos;':'&APOS;',
-                   '&amp;': '&AMP;'}
+                        '&#160;':'&##160;',
+                        '&ensp;':'&ENSP;',
+                        '&#8194;':'&##8194;',
+                        '&emsp;':'&EMSP;',
+                        '&#8195;':'&##8195;',
+                        '&thinsp;':'&THINSP;',
+                        '&#8201;':'&##8201;',
+                        '&shy;':'&SHY;',
+                        '&#173;':'&##173;',
+                        '&lt;':'&TL;', #these two are converted by html.unescape even if they are
+                        '&gt;':'&TG;', #in uppercase or missing of the semicolon
+                        '&quot;':'&QUOT;',
+                        '&apos;':'&APOS;',
+                        '&amp;': '&AMP;'}
     for x,y in preserveEntities.items():
         soupDecoded = soupDecoded.replace(x, y)
     soupDecoded = html.unescape(soupDecoded)

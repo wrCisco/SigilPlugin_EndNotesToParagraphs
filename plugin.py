@@ -3,17 +3,57 @@
 import sys
 import re
 import html
-import bs4
 from tkinter import *
 from tkinter import ttk
+
 import languages
 import numberings
+
+try:
+    import sigil_bs4
+    embedded_ = True
+except ImportError:
+    import bs4 as sigil_bs4
+    sigil_bs4.element.STRUCTURAL_TAGS = ("article","aside","blockquote",
+        "body","canvas","div","dl","figure","footer","head","header","hr",
+        "html","ol","section","script","style","table","ul")
+    embedded_ = False
 
 
 
 language = languages.english
 
 
+class myBeautifulSoup(sigil_bs4.BeautifulSoup):
+    if embedded_:
+        def __init__(self, markup="", features=None, builder=None,
+                     parse_only=None, from_encoding=None, exclude_encodings=None,
+                     **kwargs):
+            super().__init__(markup, features, builder, parse_only,
+                             from_encoding, exclude_encodings, **kwargs)
+                             
+        def prettyprint_xhtml(self, indent_level=0, eventual_encoding=DEFAULT_OUTPUT_ENCODING,
+                              formatter="minimal", indent_chars=" "):
+            encoding_part = ''
+            if eventual_encoding != None:
+                encoding_part = ' encoding="%s"' % eventual_encoding
+            prefix = '<?xml version="1.0"%s?>\n' % encoding_part
+            if super(sigil_bs4.BeautifulSoup, self).prettyprint_xhtml(indent_level,
+                                eventual_encoding, formatter, indent_chars).startswith("<?xml"):
+                return super(BeautifulSoup, self).prettyprint_xhtml(indent_level, eventual_encoding,
+                                                                    formatter, indent_chars)
+            else:
+                return prefix + super(BeautifulSoup, self).prettyprint_xhtml(indent_level,
+                                            eventual_encoding, formatter, indent_chars)
+    else:
+        def __init__(self, markup="", features=None, builder=None,
+                     parse_only=None, from_encoding=None, **kwargs):
+            super().__init__(markup, features, builder, parse_only,
+                             from_encoding, **kwargs)
+        
+        def prettyprint_xhtml(self):
+            return decodeAdjuster(self)
+            
 
 class MainDialog(Tk):
     """Dialog window that lets the user set the options at the beginning of the plugin's run."""
@@ -165,7 +205,7 @@ class MainDialog(Tk):
                 
             #Find all the classes associated with tag "ol" in the epub
             classFinder = bk.readfile(fileId)
-            classFinderBS = bs4.BeautifulSoup(classFinder, 'html.parser')
+            classFinderBS = myBeautifulSoup(classFinder, 'html.parser')
             for eachOl in classFinderBS.find_all('ol'):
                 try:
                     for eachClass in eachOl.attrs['class']:
@@ -274,7 +314,7 @@ def run(bk):
     for idListItem in parameters['idList']:
         noteIdFile = bk.href_to_id(idListItem)
         noteFile = bk.readfile(noteIdFile)
-        noteFileBS = bs4.BeautifulSoup(noteFile, 'html.parser')
+        noteFileBS = myBeautifulSoup(noteFile, 'html.parser')
         notesNewWrapper = noteFileBS.new_tag('div')
         notesOldWrapper = ''
         if parameters['classtolookfor']:
@@ -306,14 +346,15 @@ def run(bk):
         notesOldWrapper.unwrap()
         print(language[18].format(noteIdFile))
         
-        #Every first degree "li" tag in the notes's container will be replaced with "p".
+        #Every first degree "li" tag in the notes container will be replaced with a "div"
+        #that contains one or more "p" tags.
         #It is necessary for the notes to already have an id, that will be used to look for
         #the references in the text (with the function refFinder, that also will add ids
         #to the references). Subsequently attribute href with the backlink will be added
         #to the notes.
         counter = 0
         for child in notesWrapper.children:
-            if isinstance(child, bs4.element.Tag) and child.name == 'li':
+            if isinstance(child, sigil_bs4.element.Tag) and child.name == 'li':
                 counter += 1
                 attribs = child.attrs
                 try:
@@ -321,9 +362,27 @@ def run(bk):
                         liClassSet.add(eachClass)
                 except KeyError:
                     pass
-                childNewWrapper = noteFileBS.new_tag('p')
+                childNewWrapper = noteFileBS.new_tag('div')
+                firstParagraph = noteFileBS.new_tag('p')
+                firstParagraph['class'] = 'note_first_paragraph'
                 childOldWrapper = child
-                childWrapper = child.wrap(childNewWrapper)
+                if child.p:
+                    for child_ in child.contents[:]:
+                        if child_.name == 'p' or \
+                            child_.name in sigil_bs4.element.STRUCTURAL_TAGS:
+                            break
+                        else:
+                            if isinstance(child_, sigil_bs4.NavigableString):
+                                firstParagraph.append(child_.extract().rstrip())
+                            else:
+                                firstParagraph.append(child_.extract())
+                    child.insert(0, firstParagraph)
+                    pWrapper = child
+                else:
+                    pWrapper = child.wrap(firstParagraph)
+                childWrapper = pWrapper.wrap(childNewWrapper)
+                if embedded_:
+                    childWrapper.a.insert_after("&#160;")
                 childOldWrapper.unwrap()
                 print(language[19].format(counter))
                 childWrapper.attrs = attribs
@@ -336,7 +395,7 @@ def run(bk):
                     childWrapper.a.append('{}.'.format(orderSign))
                     childWrapper.a.insert_after(' ')
                     print(language[21].format(counter))
-        bk.writefile(noteIdFile, decodeAdjuster(noteFileBS))
+        bk.writefile(noteIdFile, noteFileBS.prettyprint_xhtml())
         
         #Modifying the css... 
         if parameters['changelicss']:
@@ -374,14 +433,13 @@ def pickingNumbering(counter):
 def changeCss(bk, changerSet, switcher):
     """Regular expression are used to find and substitute li and ol 
     (associated with notes's classes and notes container's ids and classes)
-    with p and div in the stylesheets"""
+    with div in the stylesheets"""
     
     if switcher == 'li':
         toChange = 'li'
-        changeInto = 'p'
     else:
         toChange = 'ol'
-        changeInto = 'div'
+    changeInto = 'div'
         
     for cssId, cssHref in bk.css_iter():
         numSubTot = 0
@@ -415,7 +473,7 @@ def refFinder(noteIdFile, idNote, bk, counter):
 #         if idFile == noteIdFile:
 #             return
         fileRead = bk.readfile(idFile)
-        fileReadBS = bs4.BeautifulSoup(fileRead, 'html.parser')
+        fileReadBS = myBeautifulSoup(fileRead, 'html.parser')
         for link in fileReadBS('a'):
             try:
                 if link.attrs['href'].endswith(idNote):
@@ -423,12 +481,12 @@ def refFinder(noteIdFile, idNote, bk, counter):
                         link.attrs['id']
                     except KeyError:
                         link.attrs['id'] = ''.join((idNote, 'backlink'))
-                        bk.writefile(idFile, decodeAdjuster(fileReadBS))
+                        bk.writefile(idFile, noteFileBS.prettyprint_xhtml())
                         print(language[23].format(counter, hrefFile))
                     else:
                         if parameters['overwrite'] == 0:
                             link.attrs['id'] = ''.join((idNote, 'backlink'))
-                            bk.writefile(idFile, decodeAdjuster(fileReadBS))
+                            bk.writefile(idFile, noteFileBS.prettyprint_xhtml())
                             print(language[23].format(counter, hrefFile))
                         elif parameters['overwrite'] == 1:
                             print(language[24].format(
@@ -444,7 +502,7 @@ def refFinder(noteIdFile, idNote, bk, counter):
                                         counter, hrefFile, idNote))
                             elif keepOrOverwrite == 'overwrite':
                                 link.attrs['id'] = ''.join((idNote, 'backlink'))
-                                bk.writefile(idFile, decodeAdjuster(fileReadBS))
+                                bk.writefile(idFile, noteFileBS.prettyprint_xhtml())
                                 print(language[23].format(counter, hrefFile))
                     finally:
                         backlink = link.attrs['id']

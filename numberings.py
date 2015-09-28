@@ -21,10 +21,11 @@ def intToString(counter, whichLetters):
     while counter > 0:
         if counter % len(whichLetters):
             number = counter % len(whichLetters)
-            counter -= number
-            noteSign = whichLetters[number-1]+noteSign
         else:
-            counter //= len(whichLetters)
+            number = len(whichLetters)
+            counter -= 1
+        noteSign = whichLetters[number-1]+noteSign
+        counter //= len(whichLetters)
     return noteSign
 
 

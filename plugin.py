@@ -32,7 +32,7 @@ class myBeautifulSoup(sigil_bs4.BeautifulSoup):
             super().__init__(markup, features, builder, parse_only,
                              from_encoding, exclude_encodings, **kwargs)
                              
-        def prettyprint_xhtml(self, indent_level=0, eventual_encoding=DEFAULT_OUTPUT_ENCODING,
+        def prettyprint_xhtml(self, indent_level=0, eventual_encoding=sigil_bs4.DEFAULT_OUTPUT_ENCODING,
                               formatter="minimal", indent_chars=" "):
             encoding_part = ''
             if eventual_encoding != None:
@@ -40,10 +40,10 @@ class myBeautifulSoup(sigil_bs4.BeautifulSoup):
             prefix = '<?xml version="1.0"%s?>\n' % encoding_part
             if super(sigil_bs4.BeautifulSoup, self).prettyprint_xhtml(indent_level,
                                 eventual_encoding, formatter, indent_chars).startswith("<?xml"):
-                return super(BeautifulSoup, self).prettyprint_xhtml(indent_level, eventual_encoding,
+                return super(sigil_bs4.BeautifulSoup, self).prettyprint_xhtml(indent_level, eventual_encoding,
                                                                     formatter, indent_chars)
             else:
-                return prefix + super(BeautifulSoup, self).prettyprint_xhtml(indent_level,
+                return prefix + super(sigil_bs4.BeautifulSoup, self).prettyprint_xhtml(indent_level,
                                             eventual_encoding, formatter, indent_chars)
     else:
         def __init__(self, markup="", features=None, builder=None,
@@ -481,12 +481,12 @@ def refFinder(noteIdFile, idNote, bk, counter):
                         link.attrs['id']
                     except KeyError:
                         link.attrs['id'] = ''.join((idNote, 'backlink'))
-                        bk.writefile(idFile, noteFileBS.prettyprint_xhtml())
+                        bk.writefile(idFile, fileReadBS.prettyprint_xhtml())
                         print(language[23].format(counter, hrefFile))
                     else:
                         if parameters['overwrite'] == 0:
                             link.attrs['id'] = ''.join((idNote, 'backlink'))
-                            bk.writefile(idFile, noteFileBS.prettyprint_xhtml())
+                            bk.writefile(idFile, fileReadBS.prettyprint_xhtml())
                             print(language[23].format(counter, hrefFile))
                         elif parameters['overwrite'] == 1:
                             print(language[24].format(
@@ -502,7 +502,7 @@ def refFinder(noteIdFile, idNote, bk, counter):
                                         counter, hrefFile, idNote))
                             elif keepOrOverwrite == 'overwrite':
                                 link.attrs['id'] = ''.join((idNote, 'backlink'))
-                                bk.writefile(idFile, noteFileBS.prettyprint_xhtml())
+                                bk.writefile(idFile, fileReadBS.prettyprint_xhtml())
                                 print(language[23].format(counter, hrefFile))
                     finally:
                         backlink = link.attrs['id']

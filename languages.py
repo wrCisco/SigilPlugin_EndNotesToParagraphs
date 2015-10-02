@@ -8,7 +8,7 @@ italiano = {0:"Seleziona i file dove si trovano le note:",
             3:"Sovrascrivilo con l'id standard delle note",
             4:"Usa l'id già presente per il backlink",
             5:"Chiedi di volta in volta",
-            6:"Sostituisco li.<classe/i delle note> con p.<classe/i "
+            6:"Sostituisco li.<classe/i delle note> con div.<classe/i "
             "delle note> nei fogli stile?\n(con la casella segnata: sì).",
             7:"Sostituisco ol.<classe/i del contenitore delle note> "
             "con div.<classe/i del contenitore>\ne ol#<id del contenitore> "
@@ -25,7 +25,7 @@ italiano = {0:"Seleziona i file dove si trovano le note:",
             16:"Ok, non tocco niente.",
             17:"Non ho trovato nessuna lista in {}",
             18:"Sostituito \"ol\" con \"div\" in {}",
-            19:"Sostituiti {} \"li\" con \"p\"",
+            19:"Sostituiti {} \"li\" con \"div\"",
             20:"Aggiunto il backlink alla nota {}",
             21:"Aggiunta numerazione alla nota {}",
             22:"Voci cercate nel foglio stile {}: {}\nPer sostituirle con: {}"
@@ -39,10 +39,10 @@ italiano = {0:"Seleziona i file dove si trovano le note:",
 english = {0:"Select notes's files:",
            1:"Look for notes list(s) with a particular class",
            2:"\nWhat shall I do if the references to the notes in the text already have an id?",
-           3:"Overwrite it with notes's standard id",
-           4:"Use the existent id for the backlink",
+           3:"Overwrite it with notes standard id",
+           4:"Use the existent id for backlink",
            5:"Ask everytime",
-           6:"Shall I replace li.<notes class(es)> with p.<notes "
+           6:"Shall I replace li.<notes class(es)> with div.<notes "
            "class(es)> in stylesheets?\n(signed box: yes).",
            7:"Shall I replace ol.<notes container class(es)> "
            "with div.<container class(es)> and\nol#<container id> "
@@ -59,14 +59,14 @@ english = {0:"Select notes's files:",
            16:"OK, I won't touch a thing.",
            17:"I didn\'t find any list in {}",
            18:"Replaced \"ol\" with \"div\" in {}",
-           19:"Replaced {} \"li\" with \"p\"",
+           19:"Replaced {} \"li\" with \"div\"",
            20:"Added backlink to note {}",
            21:"Added numbering to note {}",
            22:"\nEntries sought in stylesheet {}: {}\nTo replace with: {}"
            "\nFulfilled {} replacements.",
-           23:"Added backlink id to the reference of the note {} in file {}",
-           24:"The reference to the note {} in file {} already has an id: {}.\n"
-           "I will use the existent id for the backlink from the note",
-           25:"I didn't find any reference for the note {}: I won't add the backlink",
-           26:"Which numbering shall I use for the notes?\n"
+           23:"Added backlink id to reference of the note {} in file {}",
+           24:"The reference to note {} in file {} already has an id: {}.\n"
+           "I will use the existent id for backlink from the note",
+           25:"I didn't find any reference for note {}: I won't add the backlink",
+           26:"Which numbering shall I use for notes?\n"
            "Warning: this will affect only notes, not their references."}

@@ -37,16 +37,16 @@ italiano = {0:"Seleziona i file dove si trovano le note:",
             26:"Quale numerazione uso per le note?\n"
             "Attenzione: questo avrà effetto solo sulle note, non sui rimandi alle note"}
 english = {0:"Select notes's files:",
-           1:"Look for notes's list(s) with a class in particular",
+           1:"Look for notes list(s) with a particular class",
            2:"\nWhat shall I do if the references to the notes in the text already have an id?",
            3:"Overwrite it with notes's standard id",
            4:"Use the existent id for the backlink",
            5:"Ask everytime",
-           6:"Shall I replace li.<notes's class(es)> with p.<notes's "
+           6:"Shall I replace li.<notes class(es)> with p.<notes "
            "class(es)> in stylesheets?\n(signed box: yes).",
-           7:"Shall I replace ol.<notes container's class(es)> "
-           "with div.<container's class(es)> and\nol#<container's id> "
-           "with div#<container's id> in stylesheets?\n(signed box: yes).",
+           7:"Shall I replace ol.<notes container class(es)> "
+           "with div.<container class(es)> and\nol#<container id> "
+           "with div#<container id> in stylesheets?\n(signed box: yes).",
            8:"OK",
            9:"Cancel",
            10:"Found a reference to a note that already has an id",

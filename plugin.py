@@ -32,19 +32,6 @@ class myBeautifulSoup(sigil_bs4.BeautifulSoup):
             super().__init__(markup, features, builder, parse_only,
                              from_encoding, exclude_encodings, **kwargs)
                              
-        def prettyprint_xhtml(self, indent_level=0, eventual_encoding=sigil_bs4.DEFAULT_OUTPUT_ENCODING,
-                              formatter="minimal", indent_chars=" "):
-            encoding_part = ''
-            if eventual_encoding != None:
-                encoding_part = ' encoding="%s"' % eventual_encoding
-            prefix = '<?xml version="1.0"%s?>\n' % encoding_part
-            if super(sigil_bs4.BeautifulSoup, self).prettyprint_xhtml(indent_level,
-                                eventual_encoding, formatter, indent_chars).startswith("<?xml"):
-                return super(sigil_bs4.BeautifulSoup, self).prettyprint_xhtml(indent_level, eventual_encoding,
-                                                                    formatter, indent_chars)
-            else:
-                return prefix + super(sigil_bs4.BeautifulSoup, self).prettyprint_xhtml(indent_level,
-                                            eventual_encoding, formatter, indent_chars)
     else:
         def __init__(self, markup="", features=None, builder=None,
                      parse_only=None, from_encoding=None, **kwargs):
